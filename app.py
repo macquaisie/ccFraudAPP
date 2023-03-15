@@ -42,7 +42,7 @@ with st.sidebar:
                            'Team Members',
                            'References'],
                           icons=['search','folder','person','link'],
-                          default_index=2)
+                          default_index=0)
     
     
 # Fraud Detection Prediction Page
