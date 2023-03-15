@@ -42,7 +42,7 @@ with st.sidebar:
                            'Team Members',
                            'References'],
                           icons=['search','folder','person','link'],
-                          default_index=0)
+                          default_index=2)
     
     
 # Fraud Detection Prediction Page
@@ -57,7 +57,7 @@ if (selected == 'Fraud Detection'):
     
     # getting the input data from the user
     
-    file = st.file_uploader('Upload file', type='csv')
+    file = st.file_uploader('Upload your creditcard.csv here', type='csv')
     
     data=pd.DataFrame(columns=['Time (second)','V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10', 'V11', 'V12', 'V13', 'V14', 'V15', 'V16', 
                                   'V17', 'V18', 'V19', 'V20', 'V21', 'V22', 'V23', 'V24', 'V25', 'V26', 'V27', 'V28', 'Amount','Class'])
@@ -65,7 +65,7 @@ if (selected == 'Fraud Detection'):
     if file is not None:
         # read data from file
         data = pd.read_csv(file)
-    endpoint = 'https://ccfraudapi.onrender.com/ccmodel_prediction'
+    endpoint = 'http://127.0.0.1:8000/ccmodel_prediction'
     #url = 'https://ccfraudapi.onrender.com/ccmodel_prediction'
 
     
@@ -176,13 +176,186 @@ if (selected == 'Fraud Detection'):
         Classes= results['Class'].value_counts()
         placeholder = st.empty()
         placeholder.empty()
-        placeholder.table(results.head(30))
         
-        if i == 10:
-            placeholder.empty()
+        im=st.empty()
+        a=st.empty()
+        ims=st.empty()
+        b=st.empty()
+        imr=st.empty()
+        c=st.empty()
+        imm=st.empty()
+        d=st.empty()
+        qq1=st.empty()
+        qq2=st.empty()
+        qq3=st.empty()
+        qq4=st.empty()
+        im.empty()
+        a.empty()
+        ims.empty()
+        b.empty()
+        imr.empty()
+        c.empty()
+        imm.empty()
+        d.empty()
+        qq1.empty()
+        qq2.empty()
+        qq3.empty()
+        qq4.empty()
+        #placeholder.table(results)
+        non_fraud= results['Class'] ==0
+        fraud= results['Class'] ==1 
+        Classes= results['Class'].value_counts()
+      
+        
+        non_fraud= results['Class'] ==0
+        fraud= results['Class'] ==1 
+        Classes= results['Class'].value_counts()
+      
+        
+    
+
+
+        
+
+    
+        total_class = float(Classes.sum())
+        
+        total_non_fraud = float(non_fraud.sum())
+        total_fraud = float(fraud.sum())
+        total_Amount= float(results['rl_Amount'].sum()) 
+        
+        ck=st.empty()
+        total1,total2,total3,total4 = ck.columns(4)
+
+        with total1:
+            im=st.empty()
+            a=st.empty()
+            im.image('images/fraud-detection.png',width=None)
+            a.metric(label = 'Total Class', value= numerize(total_class))
+           
+            
+        with total2:
+            ims=st.empty()
+            b=st.empty()
+            ims.image('images/non_fraud.png',width=160)
+            b.metric(label='Total Non Fraud', value=numerize(total_non_fraud))
+           
+
+        with total3:
+            imr=st.empty()
+            c=st.empty()
+            imr.image('images/fraud.png',width=158)
+            c.metric(label= 'Total Fraud',value=numerize(total_fraud,2))
+            
+            
+
+        with total4:
+            imm=st.empty()
+            d=st.empty()
+            imm.image('images/amount.png',width=200)
+            d.metric(label='Total Amount',value=numerize(total_Amount))
+            
+
+        
+        qqq=st.empty()
+        Q1,Q2 = qqq.columns(2)
+
+        with Q1:
+            fig1 = px.histogram(results, x='rl_Amount', color='Class', nbins=50, range_x=[0, 5000], title='Distribution of Amount for Class 0 and 1')
+            fig1.update_layout(title = {'x' : 0.5},
+                                            plot_bgcolor = "rgba(0,0,0,0)",
+                                            xaxis =(dict(showgrid = False)),
+                                            yaxis =(dict(showgrid = False)))
+            qq1=st.empty()
+            qq1.plotly_chart(fig1, theme="streamlit", use_container_width=True)
+            
+            
+
+        with Q2:
+            
+            #Plot 2: Boxplot of Time for Class 0 and 1
+            fig2 = px.box(results, x='Class', y='rl_Time', points='all', title='Boxplot of Time for Class 0 and 1')
+            fig2.update_layout(title = {'x' : 0.5},
+                                            plot_bgcolor = "rgba(0,0,0,0)",
+                                            xaxis =(dict(showgrid = False)),
+                                            yaxis =(dict(showgrid = False)))
+            qq2=st.empty()
+            qq2.plotly_chart(fig2, theme="streamlit", use_container_width=True)
+            
+            
+        
+        qqqq=st.empty()
+        Q3,Q4 = qqqq.columns(2)
+        
+        with Q3:
+            
+        
+            # Create scatter plot
+            fig3 = px.scatter(results, x='rl_Time', y='rl_Amount', color='Class',
+                            title='Scatter Plot of Time vs Amount for Fraudulent and Non-Fraudulent Transactions')
+            fig3.update_traces(marker=dict(size=3))
+            fig3.update_layout(title = {'x' : 0.5},
+                                            plot_bgcolor = "rgba(0,0,0,0)",
+                                            xaxis =(dict(showgrid = False)),
+                                            yaxis =(dict(showgrid = False)))
+            qq3=st.empty()
+            qq3.plotly_chart(fig3, theme="streamlit", use_container_width=True)
+
+            
+            
+            
+        with Q4:
+            
+            # Select data for fraudulent and non-fraudulent transactions
+            fraudulent = results[results['Class'] == 1]
+            non_fraudulent = results[results['Class'] == 0]
+            # Group data by hour and count the number of fraudulent transactions
+            fraudulent_count = fraudulent.groupby(fraudulent['rl_Time'].apply(lambda x: int(x/3600)))['Class'].count()
+
+            # Create time series plot
+            fig4 = go.Figure()
+            fig4.add_trace(go.Scatter(x=fraudulent_count.index, y=fraudulent_count.values,
+                                    mode='lines+markers', name='Fraudulent'))
+            fig4.update_layout(title='Time Series Plot of Fraudulent Transactions',
+                            xaxis_title='Time (in hours)', yaxis_title='Count', plot_bgcolor = "rgba(0,0,0,0)",
+                                            xaxis =(dict(showgrid = False)),
+                                            yaxis =(dict(showgrid = False)))
+            qq4=st.empty()
+            qq4.plotly_chart(fig4, theme="streamlit", use_container_width=True)
+            
+        
+        mk=st.empty()
+        
+        cm=mk.container()
+        cm.table(results) 
+         
+        
+        
+        
+            
+        if i == len(df):
+            
             break
-        time.sleep(10)
+        time.sleep(5)
         placeholder.empty()
+        im.empty()
+        a.empty()
+        ims.empty()
+        b.empty()
+        imr.empty()
+        c.empty()
+        imm.empty()
+        d.empty()
+        qq1.empty()
+        qq2.empty()
+        qq3.empty()
+        qq4.empty()
+        ck.empty()
+        qqq.empty()
+        qqqq.empty()
+         
+        mk.empty()
+        
         
             
             # Add the features and predicted class to the results DataFrame
@@ -192,124 +365,124 @@ if (selected == 'Fraud Detection'):
             
             
         # Print the results for this iteration
-    print('I am done')
+    
         
        
     
         
-    non_fraud= results['Class'] ==0
-    fraud= results['Class'] ==1 
-    Classes= results['Class'].value_counts()
+    # non_fraud= results['Class'] ==0
+    # fraud= results['Class'] ==1 
+    # Classes= results['Class'].value_counts()
       
     
-    st.table(results.head())
+    # st.table(results.head())
     
 
 
     with st.sidebar:
-        Class_filter = st.multiselect(label= 'Select The Class',
-                                    options=results['Class'].unique(),
-                                    default=results['Class'].unique())
+        
+        
+        Class_filter = st.multiselect(label= 'Select The Class',options=results['Class'].unique(),default=results['Class'].unique())
 
-        Amount_filter = st.multiselect(label='Select Amount',
-                                options=results['rl_Amount'].unique(),
-                                default=results['rl_Amount'].unique())
-    # merge the 1D dataframe to the multi-dimensional dataframe using concat
+        Amount_filter = st.multiselect(label='Select Amount',options=results['rl_Amount'].unique(),default=results['rl_Amount'].unique())
+        
+    
+    # # merge the 1D dataframe to the multi-dimensional dataframe using concat
     
 
-    # merge the 1D dataframe to the multi-dimensional dataframe using join
-    #merged_df = df.join(series)
+    # # merge the 1D dataframe to the multi-dimensional dataframe using join
+    # #merged_df = df.join(series)
 
        
 
-    df1 = results.query('Class == @Class_filter | rl_Amount == @Amount_filter')
+    df1 = results.query('Class == @Class_filter & rl_Amount == @Amount_filter')
     
-    total_class = float(Classes.sum())
+    # total_class = float(Classes.sum())
     
-    total_non_fraud = float(non_fraud.sum())
-    total_fraud = float(fraud.sum())
-    total_Amount= float(df1['rl_Amount'].sum()) 
+    # total_non_fraud = float(non_fraud.sum())
+    # total_fraud = float(fraud.sum())
+    # total_Amount= float(df1['rl_Amount'].sum()) 
     
-    total1,total2,total3,total4 = st.columns(4)
+    # total1,total2,total3,total4 = st.columns(4)
 
-    with total1:
-        st.image('images/fraud-detection.png',width=None)
-        st.metric(label = 'Total Class', value= numerize(total_class))
+    # with total1:
+    #     st.image('images/fraud-detection.png',width=None)
+    #     st.metric(label = 'Total Class', value= numerize(total_class))
         
-    with total2:
-        st.image('images/non_fraud.png',width=160)
-        st.metric(label='Total Non Fraud', value=numerize(total_non_fraud))
+    # with total2:
+    #     st.image('images/non_fraud.png',width=160)
+    #     st.metric(label='Total Non Fraud', value=numerize(total_non_fraud))
 
-    with total3:
-        st.image('images/fraud.png',width=158)
-        st.metric(label= 'Total Fraud',value=numerize(total_fraud,2))
+    # with total3:
+    #     st.image('images/fraud.png',width=158)
+    #     st.metric(label= 'Total Fraud',value=numerize(total_fraud,2))
 
-    with total4:
-        st.image('images/amount.png',width=200)
-        st.metric(label='Total Amount',value=numerize(total_Amount))
+    # with total4:
+    #     st.image('images/amount.png',width=200)
+    #     st.metric(label='Total Amount',value=numerize(total_Amount))
 
     
     
-    Q1,Q2 = st.columns(2)
+    # Q1,Q2 = st.columns(2)
 
-    with Q1:
-        fig1 = px.histogram(results, x='rl_Amount', color='Class', nbins=50, range_x=[0, 5000], title='Distribution of Amount for Class 0 and 1')
-        fig1.update_layout(title = {'x' : 0.5},
-                                        plot_bgcolor = "rgba(0,0,0,0)",
-                                        xaxis =(dict(showgrid = False)),
-                                        yaxis =(dict(showgrid = False)))
-        st.plotly_chart(fig1, theme="streamlit", use_container_width=True)
+    # with Q1:
+    #     fig1 = px.histogram(results, x='rl_Amount', color='Class', nbins=50, range_x=[0, 5000], title='Distribution of Amount for Class 0 and 1')
+    #     fig1.update_layout(title = {'x' : 0.5},
+    #                                     plot_bgcolor = "rgba(0,0,0,0)",
+    #                                     xaxis =(dict(showgrid = False)),
+    #                                     yaxis =(dict(showgrid = False)))
+    #     st.plotly_chart(fig1, theme="streamlit", use_container_width=True)
         
         
 
-    with Q2:
+    # with Q2:
         
-        #Plot 2: Boxplot of Time for Class 0 and 1
-        fig2 = px.box(results, x='Class', y='rl_Time', points='all', title='Boxplot of Time for Class 0 and 1')
-        fig2.update_layout(title = {'x' : 0.5},
-                                        plot_bgcolor = "rgba(0,0,0,0)",
-                                        xaxis =(dict(showgrid = False)),
-                                        yaxis =(dict(showgrid = False)))
-        st.plotly_chart(fig2, theme="streamlit", use_container_width=True)
+    #     #Plot 2: Boxplot of Time for Class 0 and 1
+    #     fig2 = px.box(results, x='Class', y='rl_Time', points='all', title='Boxplot of Time for Class 0 and 1')
+    #     fig2.update_layout(title = {'x' : 0.5},
+    #                                     plot_bgcolor = "rgba(0,0,0,0)",
+    #                                     xaxis =(dict(showgrid = False)),
+    #                                     yaxis =(dict(showgrid = False)))
+    #     st.plotly_chart(fig2, theme="streamlit", use_container_width=True)
         
         
        
        
-    Q3,Q4 = st.columns(2)
+    # Q3,Q4 = st.columns(2)
     
-    with Q3:
+    # with Q3:
            
        
-        # Create scatter plot
-        fig3 = px.scatter(results, x='rl_Time', y='rl_Amount', color='Class',
-                        title='Scatter Plot of Time vs Amount for Fraudulent and Non-Fraudulent Transactions')
-        fig3.update_traces(marker=dict(size=3))
-        fig3.update_layout(title = {'x' : 0.5},
-                                        plot_bgcolor = "rgba(0,0,0,0)",
-                                        xaxis =(dict(showgrid = False)),
-                                        yaxis =(dict(showgrid = False)))
-        st.plotly_chart(fig3, theme="streamlit", use_container_width=True)
+    #     # Create scatter plot
+    #     fig3 = px.scatter(results, x='rl_Time', y='rl_Amount', color='Class',
+    #                     title='Scatter Plot of Time vs Amount for Fraudulent and Non-Fraudulent Transactions')
+    #     fig3.update_traces(marker=dict(size=3))
+    #     fig3.update_layout(title = {'x' : 0.5},
+    #                                     plot_bgcolor = "rgba(0,0,0,0)",
+    #                                     xaxis =(dict(showgrid = False)),
+    #                                     yaxis =(dict(showgrid = False)))
+    #     st.plotly_chart(fig3, theme="streamlit", use_container_width=True)
 
         
         
         
-    with Q4:
+    # with Q4:
         
-        # Select data for fraudulent and non-fraudulent transactions
-        fraudulent = results[results['Class'] == 1]
-        non_fraudulent = results[results['Class'] == 0]
-        # Group data by hour and count the number of fraudulent transactions
-        fraudulent_count = fraudulent.groupby(fraudulent['rl_Time'].apply(lambda x: int(x/3600)))['Class'].count()
+    #     # Select data for fraudulent and non-fraudulent transactions
+    #     fraudulent = results[results['Class'] == 1]
+    #     non_fraudulent = results[results['Class'] == 0]
+    #     # Group data by hour and count the number of fraudulent transactions
+    #     fraudulent_count = fraudulent.groupby(fraudulent['rl_Time'].apply(lambda x: int(x/3600)))['Class'].count()
 
-        # Create time series plot
-        fig4 = go.Figure()
-        fig4.add_trace(go.Scatter(x=fraudulent_count.index, y=fraudulent_count.values,
-                                 mode='lines+markers', name='Fraudulent'))
-        fig4.update_layout(title='Time Series Plot of Fraudulent Transactions',
-                          xaxis_title='Time (in hours)', yaxis_title='Count', plot_bgcolor = "rgba(0,0,0,0)",
-                                        xaxis =(dict(showgrid = False)),
-                                        yaxis =(dict(showgrid = False)))
-        st.plotly_chart(fig4, theme="streamlit", use_container_width=True)
+    #     # Create time series plot
+    #     fig4 = go.Figure()
+    #     fig4.add_trace(go.Scatter(x=fraudulent_count.index, y=fraudulent_count.values,
+    #                              mode='lines+markers', name='Fraudulent'))
+    #     fig4.update_layout(title='Time Series Plot of Fraudulent Transactions',
+    #                       xaxis_title='Time (in hours)', yaxis_title='Count', plot_bgcolor = "rgba(0,0,0,0)",
+    #                                     xaxis =(dict(showgrid = False)),
+    #                                     yaxis =(dict(showgrid = False)))
+    #     st.plotly_chart(fig4, theme="streamlit", use_container_width=True)
 
     
     
@@ -335,6 +508,7 @@ if (selected == 'Team Members'):
     with header_mid:
         st.title('Timeseries Anomaly Detection')
         st.markdown("<h3 style='text-align: center; color: red;'>Team Members</h3>", unsafe_allow_html=True)
+    #st.markdown('<ol><li>Choudhary, Muskan  k2268186 </li><li>Acquaisie, Mark A  k2218627 </li><li>Arumalla, Srija  k2148736 </li><li>Olawale, Arowolo  K2265988</li></ol>', unsafe_allow_html=True)
     data_t = {
         'Name': ['Choudhary, Muskan', 'Acquaisie, Mark A', 'Arumalla, Srija', 'Olawale, Arowolo'],
         'K-Number': ['k2268186', 'k2218627', 'k2148736', 'K2265988']}
