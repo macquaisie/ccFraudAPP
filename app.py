@@ -178,7 +178,7 @@ if (selected == 'Fraud Detection'):
         placeholder.empty()
         placeholder.table(results.head(30))
         
-        if i == 30:
+        if i == 10:
             placeholder.empty()
             break
         time.sleep(10)
@@ -335,7 +335,6 @@ if (selected == 'Team Members'):
     with header_mid:
         st.title('Timeseries Anomaly Detection')
         st.markdown("<h3 style='text-align: center; color: red;'>Team Members</h3>", unsafe_allow_html=True)
-    #st.markdown('<ol><li>Choudhary, Muskan  k2268186 </li><li>Acquaisie, Mark A  k2218627 </li><li>Arumalla, Srija  k2148736 </li><li>Olawale, Arowolo  K2265988</li></ol>', unsafe_allow_html=True)
     data_t = {
         'Name': ['Choudhary, Muskan', 'Acquaisie, Mark A', 'Arumalla, Srija', 'Olawale, Arowolo'],
         'K-Number': ['k2268186', 'k2218627', 'k2148736', 'K2265988']}
