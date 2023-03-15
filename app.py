@@ -65,7 +65,7 @@ if (selected == 'Fraud Detection'):
     if file is not None:
         # read data from file
         data = pd.read_csv(file)
-    endpoint = 'http://127.0.0.1:8000/ccmodel_prediction'
+    endpoint = 'https://ccfraudapi.onrender.com/ccmodel_prediction'
     #url = 'https://ccfraudapi.onrender.com/ccmodel_prediction'
 
     
