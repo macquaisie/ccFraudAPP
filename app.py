@@ -65,8 +65,8 @@ if (selected == 'Fraud Detection'):
     if file is not None:
         # read data from file
         data = pd.read_csv(file)
+    #endpoint = 'http://127.0.0.1:8000/ccmodel_prediction'
     endpoint = 'https://ccfraudapi.onrender.com/ccmodel_prediction'
-    
 
     
     
@@ -261,7 +261,7 @@ if (selected == 'Fraud Detection'):
         Q1,Q2 = qqq.columns(2)
 
         with Q1:
-            fig1 = px.histogram(results, x='rl_Amount', color='Class', nbins=50, range_x=[0, 5000], title='Distribution of Amount for Class 0 and 1')
+            fig1 = px.histogram(results, x='rl_Amount', color='Class', nbins=2, range_x=[0, 5000], title='Distribution of Amount for Class 0 and 1')
             fig1.update_layout(title = {'x' : 0.5},
                                             plot_bgcolor = "rgba(0,0,0,0)",
                                             xaxis =(dict(showgrid = False)),
@@ -293,7 +293,7 @@ if (selected == 'Fraud Detection'):
             # Create scatter plot
             fig3 = px.scatter(results, x='rl_Time', y='rl_Amount', color='Class',
                             title='Scatter Plot of Time vs Amount for Fraudulent and Non-Fraudulent Transactions')
-            fig3.update_traces(marker=dict(size=3))
+            fig3.update_traces(marker=dict(size=10))
             fig3.update_layout(title = {'x' : 0.5},
                                             plot_bgcolor = "rgba(0,0,0,0)",
                                             xaxis =(dict(showgrid = False)),
@@ -311,12 +311,15 @@ if (selected == 'Fraud Detection'):
             non_fraudulent = results[results['Class'] == 0]
             # Group data by hour and count the number of fraudulent transactions
             fraudulent_count = fraudulent.groupby(fraudulent['rl_Time'].apply(lambda x: int(x/3600)))['Class'].count()
+            non_fraudulent_count = non_fraudulent.groupby(non_fraudulent['rl_Time'].apply(lambda x: int(x/3600)))['Class'].count()
 
             # Create time series plot
             fig4 = go.Figure()
             fig4.add_trace(go.Scatter(x=fraudulent_count.index, y=fraudulent_count.values,
-                                    mode='lines+markers', name='Fraudulent'))
-            fig4.update_layout(title='Time Series Plot of Fraudulent Transactions',
+                                    mode='lines', name='Fraudulent', line=dict(color='red')))
+            fig4.add_trace(go.Scatter(x=non_fraudulent_count.index, y=non_fraudulent_count.values,
+                                    mode='lines', name='Non-Fraudulent', marker=dict(color='blue', size=8)))
+            fig4.update_layout(title='Time Series Plot of Fraudulent and Non Fraudulent Transactions',
                             xaxis_title='Time (in hours)', yaxis_title='Count', plot_bgcolor = "rgba(0,0,0,0)",
                                             xaxis =(dict(showgrid = False)),
                                             yaxis =(dict(showgrid = False)))
@@ -333,10 +336,10 @@ if (selected == 'Fraud Detection'):
         
         
             
-        if i == len(df):
+        if i == 300:
             
             break
-        time.sleep(5)
+        time.sleep(2)
         placeholder.empty()
         im.empty()
         a.empty()
