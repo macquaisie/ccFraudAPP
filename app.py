@@ -16,7 +16,7 @@ from sklearn.preprocessing import StandardScaler
 
 hide_streamlit_style = """
             <style>
-            #MainMenu {visibility: hidden;}
+            #MainMenu {visibility: visible;}
             footer {visibility: hidden;}
             footer:after {
 	        content:'Made in KU with ❤️.'; 
@@ -527,4 +527,25 @@ if (selected == 'References'):
     # page title
     with header_mid:
         st.title('Timeseries Anomaly Detection')
-        st.markdown("<h3 style='text-align: center; color: red;'>References</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; color: red;'>References & Evaluation Metrics</h3>", unsafe_allow_html=True)
+        st.subheader('References')
+        st.markdown("<p style='text-align: left; color: white; '>Alarfaj, F.K. et al. (2022) “Credit card fraud detection using state-of-the-art machine learning and Deep Learning Algorithms,” IEEE Access, 10, pp. 39700–39715. Available at: https://doi.org/10.1109/access.2022.3166891.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: left; color: white; '>Fiore, U. et al. (2019) “Using generative adversarial networks for improving classification effectiveness in credit card fraud detection,” Information Sciences, 479, pp. 448–455. Available at: https://doi.org/10.1016/j.ins.2017.12.030.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: left; color: white; '>Forough, J. and Momtazi, S. (2021) “Sequential Credit Card Fraud Detection: A joint deep neural network and probabilistic graphical model approach,” Expert Systems, 39(1). Available at: https://doi.org/10.1111/exsy.12795. </p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: left; color: white; '>Global Network Cards - purchase transactions (2022) Nilson Report | Research | The World's Top Card Issuers and Merchant Acquirers. Available at: https://nilsonreport.com/research_featured_chart.php (Accessed: March 13, 2023).</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: left; color: white; '>Pumsirirat, A. and Yan, L. (2018) “Credit card fraud detection using deep learning based on auto-encoder and restricted Boltzmann machine,” International Journal of Advanced Computer Science and Applications, 9(1). Available at: https://doi.org/10.14569/ijacsa.2018.090103.</p>", unsafe_allow_html=True)
+        st.subheader('')
+        st.subheader('Evaluation Metrics')
+        st.markdown("<p style='text-align: left; color: white; '> Evaluated performance of the models on the test dataset with tabulated results below in a comparative study (example metrics: F1, precision, recall, accuracy,confusion matrix, etc.)</p>", unsafe_allow_html=True)
+        data_t = {'Evaluation Metrics' : ['F1 Score', 'Precision', 'Recall', 'Accuracy'],
+        'Model 1': ['0.9983', '0.9966', '1.0', '0.9982'],
+        'Model 2': ['0.9988', '0.9976', '1.0', '0.9988'],
+        'Model 3': ['0.9995', '0.9991', '1.0', '0.9995'],
+        'Model 4': ['0.1792', '0.9757', '0.0986', '0.5470']}
+        st.markdown("<p style='text-align: left; color: white; '> Please refer to our report for detailed insights and Confusion Matrix table</p>", unsafe_allow_html=True)
+        
+         
+        Evaluation = pd.DataFrame(data_t, columns=['Evaluation Metrics', 'Model 1', 'Model 2', 'Model 3', 'Model 4'])
+    st.table(Evaluation)
+        
+
