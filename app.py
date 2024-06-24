@@ -127,10 +127,11 @@ if selected == 'Fraud Detection':
 
         st.table(results)
 
-    with st.sidebar:
-        Class_filter = st.multiselect(label='Select The Class', options=results['Class'].unique(), default=results['Class'].unique())
-        Amount_filter = st.multiselect(label='Select Amount', options=results['rl_Amount'].unique(), default=results['rl_Amount'].unique())
-        df1 = results.query('Class == @Class_filter & rl_Amount == @Amount_filter')
+        # Sidebar filter section after results are populated
+        with st.sidebar:
+            Class_filter = st.multiselect(label='Select The Class', options=results['Class'].unique(), default=results['Class'].unique())
+            Amount_filter = st.multiselect(label='Select Amount', options=results['rl_Amount'].unique(), default=results['rl_Amount'].unique())
+            df1 = results.query('Class == @Class_filter & rl_Amount == @Amount_filter')
 
 if selected == 'Assignment Overview':
     header_left, header_mid, header_right = st.columns([1, 12, 1])
