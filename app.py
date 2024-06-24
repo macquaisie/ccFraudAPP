@@ -35,7 +35,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # sidebar for navigation
 with st.sidebar:
     
-    selected = option_menu('CI7520 Assignment 2 Timeseries Anomaly Detection',
+    selected = option_menu('Timeseries Anomaly Detection',
                           
                           ['Fraud Detection',
                            'Assignment Overview',
@@ -65,7 +65,7 @@ if (selected == 'Fraud Detection'):
     if file is not None:
         # read data from file
         data = pd.read_csv(file)
-    #endpoint = 'http://127.0.0.1:8000/ccmodel_prediction'
+    
     endpoint = 'https://ccfraudapi.onrender.com/ccmodel_prediction'
 
     
